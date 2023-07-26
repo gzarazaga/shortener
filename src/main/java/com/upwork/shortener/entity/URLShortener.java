@@ -1,6 +1,9 @@
 package com.upwork.shortener.entity;
  
-import org.joda.time.DateTime;
+import java.time.ZonedDateTime;
+
+import org.hibernate.annotations.TimeZoneStorage;
+import org.hibernate.annotations.TimeZoneStorageType;
 
 import com.upwork.shortener.utils.DomainConstants;
 
@@ -10,8 +13,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import jakarta.persistence.Temporal;
-import jakarta.persistence.TemporalType;
 
 
  
@@ -24,8 +25,8 @@ public class URLShortener implements DomainConstants {
     private Long id;
      
     @Column(name = "created_on", updatable = false)
-    @Temporal(TemporalType.TIMESTAMP)
-    private DateTime createdOn = new DateTime();
+    @TimeZoneStorage(TimeZoneStorageType.NORMALIZE_UTC)
+    private ZonedDateTime createdOn;
      
     @Column(name = "original_url")
     private String originalURL;
@@ -38,11 +39,11 @@ public class URLShortener implements DomainConstants {
         this.id = id;
     }
 
-    public DateTime getCreatedOn() {
+    public ZonedDateTime getCreatedOn() {
         return createdOn;
     }
 
-    public void setCreatedOn(DateTime createdOn) {
+    public void setCreatedOn(ZonedDateTime createdOn) {
         this.createdOn = createdOn;
     }
 

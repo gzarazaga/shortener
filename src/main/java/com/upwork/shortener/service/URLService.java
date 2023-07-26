@@ -1,7 +1,11 @@
 package com.upwork.shortener.service;
 
+import java.sql.SQLDataException;
+import java.time.ZonedDateTime;
 import java.util.Optional;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -13,7 +17,8 @@ import com.upwork.shortener.utils.Base62;
 
 @Service
 public class URLService  {
-     
+    private static final Logger LOGGER = LoggerFactory.getLogger(URLService.class);
+
     @Autowired
     private URLRepository urlRepository;
      
@@ -65,13 +70,17 @@ public class URLService  {
                 // Retrieved from the system.
                 url = exitURL.get();
             } else {
-                // Otherwise, save a new original URL
-                url.setId(urlRepository.getIdWithNextUniqueId());
-                url.setOriginalURL(originalURL);
-                url = urlRepository.save(url);
+                try {
+                    // Otherwise, save a new original URL
+                    url.setId(urlRepository.getIdWithNextUniqueId());
+                    url.setOriginalURL(originalURL);
+                    url.setCreatedOn(ZonedDateTime.now());
+                    url = urlRepository.save(url);
+                } catch (Exception e) {
+                    LOGGER.error("Error saving url {}", e);
+                }
             }
         }
-        //TODO Should handle the url didn't save successfully and return null.
         return generateURLShorterner(url);
     }
     /**
@@ -82,10 +91,10 @@ public class URLService  {
         URLShortenerDTO dto = new URLShortenerDTO();
         dto.setId(url.getId().toString());
         dto.setOriginalURL(url.getOriginalURL());
-        dto.setCreatedOn(url.getCreatedOn().toString());
+        dto.setCreatedOn(Optional.ofNullable(url.getCreatedOn()).orElse(ZonedDateTime.now()).toString());
          
         // Generate shortenedURL via base62 encode.
-        String shortenedURL = this.domain +"/" + Base62.toBase62(url.getId().intValue());
+        String shortenedURL = this.domain +"/" + Base62.toBase62(url.getId());
         dto.setShortenedURL(shortenedURL);
         return dto;
     }

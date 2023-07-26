@@ -4,5 +4,6 @@ com/upwork/shortener/config/PersistenceJPAConfig.class
 com/upwork/shortener/utils/Base62.class
 com/upwork/shortener/dto/URLShortenerDTO.class
 com/upwork/shortener/repository/URLRepository.class
+com/upwork/shortener/controler/URLShortenerControler.class
 com/upwork/shortener/entity/URLShortener.class
 com/upwork/shortener/utils/DomainConstants.class
