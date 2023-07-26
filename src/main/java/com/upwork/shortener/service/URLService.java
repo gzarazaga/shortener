@@ -1,6 +1,6 @@
 package com.upwork.shortener.service;
 
-import java.sql.SQLDataException;
+import java.time.Period;
 import java.time.ZonedDateTime;
 import java.util.Optional;
 
@@ -12,27 +12,31 @@ import org.springframework.stereotype.Service;
 
 import com.upwork.shortener.dto.URLShortenerDTO;
 import com.upwork.shortener.entity.URLShortener;
+import com.upwork.shortener.exception.ExpiredUrlException;
+import com.upwork.shortener.exception.URLNotFoundException;
 import com.upwork.shortener.repository.URLRepository;
 import com.upwork.shortener.utils.Base62;
 
 @Service
-public class URLService  {
+public class URLService {
     private static final Logger LOGGER = LoggerFactory.getLogger(URLService.class);
 
     @Autowired
     private URLRepository urlRepository;
      
     private final String domain;
+    private final int retentionPeriodinDays;
      
     @Autowired
-    public URLService(@Value("${domain.shortener}") String domain) {
+    public URLService(@Value("${domain.shortener}") String domain, @Value("${domain.retentionperiod.days}") int retentionPeriodinDays) {
         this.domain = domain;
+        this.retentionPeriodinDays = retentionPeriodinDays;
     }
 
     /**
      * Reverse the original URL from the shortened URL
      */
-    public URLShortenerDTO getURL(String shortenURL) {
+    public URLShortenerDTO getURL(String shortenURL) throws URLNotFoundException, ExpiredUrlException {
         URLShortenerDTO dto = new URLShortenerDTO();
         if (validateURL(shortenURL)) {
             //Remove domain to shortened URL if possible.
@@ -46,15 +50,28 @@ public class URLService  {
             if(urlShortener.isPresent()) {
                 // Mapped domain to DTO
                 URLShortener url = urlShortener.get();
-                dto.setId(url.getId().toString());
-                dto.setShortenedURL(shortenURL);
-                dto.setOriginalURL(url.getOriginalURL());
-                dto.setCreatedOn(url.getCreatedOn().toString());
-            } 
+                if (validateExpiration(url)) {
+                    dto.setId(url.getId().toString());
+                    dto.setShortenedURL(shortenURL);
+                    dto.setOriginalURL(url.getOriginalURL());
+                    dto.setCreatedOn(url.getCreatedOn().toString());
+                } else {
+                    throw new ExpiredUrlException("Shorten URL has expired.");
+                }
+            } else {
+                throw new URLNotFoundException("Shorten URL was not found.");
+            }
         }
         return dto;
     }
      
+    private boolean validateExpiration(URLShortener urlShortener) {
+        boolean result = false;
+        Period diff = Period.between(urlShortener.getCreatedOn().toLocalDate(),ZonedDateTime.now().toLocalDate());
+        result = diff.getDays() <= retentionPeriodinDays;
+        return result;
+    }
+
     /**
      * Save an original URL to database and then
      * generate a shortened URL.

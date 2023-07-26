@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
 
 import com.upwork.shortener.dto.URLShortenerDTO;
+import com.upwork.shortener.exception.ExpiredUrlException;
+import com.upwork.shortener.exception.URLNotFoundException;
 import com.upwork.shortener.service.URLService;
 
 @RestController
@@ -32,7 +34,7 @@ public class URLShortenerControler {
     @RequestMapping(value = "/reverse", method = RequestMethod.GET)
     @ResponseStatus(HttpStatus.OK)
     @ResponseBody
-    public URLShortenerDTO getURL(@RequestParam(value = "shortenedURL") String shortenedURL) {
+    public URLShortenerDTO getURL(@RequestParam(value = "shortenedURL") String shortenedURL) throws URLNotFoundException, ExpiredUrlException {
         return urlService.getURL(shortenedURL);
     }
 }

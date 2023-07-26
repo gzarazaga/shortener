@@ -1,9 +1,12 @@
 /home/gonzalo/workspace/shortener/src/main/java/com/upwork/shortener/service/URLService.java
 /home/gonzalo/workspace/shortener/src/main/java/com/upwork/shortener/repository/URLRepository.java
 /home/gonzalo/workspace/shortener/src/main/java/com/upwork/shortener/utils/DomainConstants.java
+/home/gonzalo/workspace/shortener/src/main/java/com/upwork/shortener/exception/URLNotFoundException.java
 /home/gonzalo/workspace/shortener/src/main/java/com/upwork/shortener/controler/URLShortenerControler.java
 /home/gonzalo/workspace/shortener/src/main/java/com/upwork/shortener/utils/Base62.java
 /home/gonzalo/workspace/shortener/src/main/java/com/upwork/shortener/entity/URLShortener.java
+/home/gonzalo/workspace/shortener/src/main/java/com/upwork/shortener/exception/GeneralHandler.java
 /home/gonzalo/workspace/shortener/src/main/java/com/upwork/shortener/config/PersistenceJPAConfig.java
 /home/gonzalo/workspace/shortener/src/main/java/com/upwork/shortener/dto/URLShortenerDTO.java
 /home/gonzalo/workspace/shortener/src/main/java/com/upwork/shortener/ShortenerApplication.java
+/home/gonzalo/workspace/shortener/src/main/java/com/upwork/shortener/exception/ExpiredUrlException.java
