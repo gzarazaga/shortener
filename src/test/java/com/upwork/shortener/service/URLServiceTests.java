@@ -10,6 +10,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
+import java.security.InvalidParameterException;
 import java.time.ZonedDateTime;
 import java.util.Optional;
 
@@ -42,7 +43,7 @@ public class URLServiceTests {
         urlShortener.setCreatedOn(ZonedDateTime.now());
 
         when(urlRepository.findById(anyLong())).thenReturn(Optional.of(urlShortener));
-        URLShortenerDTO dto = urlService.getURL("c");
+        URLShortenerDTO dto = urlService.getURL("http://www.shortener.com/c");
 
         assertEquals(dto.getId(), urlShortener.getId().toString());
         assertNotNull(dto.getCreatedOn());
@@ -60,13 +61,21 @@ public class URLServiceTests {
                 urlShortener.setCreatedOn(ZonedDateTime.now().minusDays(4));
         
                 when(urlRepository.findById(anyLong())).thenReturn(Optional.of(urlShortener));
-                URLShortenerDTO dto = urlService.getURL("c");
+                URLShortenerDTO dto = urlService.getURL("http://www.shortener.com/c");
             });
     }
 
     @Test
     void getURLNotFoundTest() {
         assertThrows(URLNotFoundException.class,
+            ()->{
+                URLShortenerDTO dto = urlService.getURL("http://www.shortener.com/c");
+            });
+    }
+
+    @Test
+    void getURLInvalidURLTest() {
+        assertThrows(InvalidParameterException.class,
             ()->{
                 URLShortenerDTO dto = urlService.getURL("c");
             });
@@ -76,13 +85,13 @@ public class URLServiceTests {
     void saveURLTest() {
         URLShortener urlShortener = new URLShortener();
         urlShortener.setId(1l);
-        urlShortener.setOriginalURL("www.google.clom");
+        urlShortener.setOriginalURL("http://www.google.com");
         urlShortener.setCreatedOn(ZonedDateTime.now());
 
         when(urlRepository.findByOriginalURL(anyString())).thenReturn(Optional.ofNullable(null));
         when(urlRepository.save(any())).thenReturn(urlShortener);
 
-        URLShortenerDTO dto = urlService.saveUrl("www.google.clom");
+        URLShortenerDTO dto = urlService.saveUrl("http://www.google.com");
 
         assertNotNull(dto);
         verify(urlRepository, times(1)). save(any());
@@ -92,12 +101,12 @@ public class URLServiceTests {
     void saveURLDontSaveTest() {
         URLShortener urlShortener = new URLShortener();
         urlShortener.setId(1l);
-        urlShortener.setOriginalURL("www.google.clom");
+        urlShortener.setOriginalURL("http://www.google.com");
         urlShortener.setCreatedOn(ZonedDateTime.now());
 
         when(urlRepository.findByOriginalURL(anyString())).thenReturn(Optional.ofNullable(urlShortener));
 
-        URLShortenerDTO dto = urlService.saveUrl("www.google.clom");
+        URLShortenerDTO dto = urlService.saveUrl("http://www.google.com");
         
         verify(urlRepository, times(0)). save(any());
     }

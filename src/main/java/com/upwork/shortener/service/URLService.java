@@ -1,5 +1,8 @@
 package com.upwork.shortener.service;
 
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.security.InvalidParameterException;
 import java.time.Period;
 import java.time.ZonedDateTime;
 import java.util.Optional;
@@ -67,6 +70,8 @@ public class URLService {
             } else {
                 throw new URLNotFoundException("Shorten URL was not found.");
             }
+        }   else {
+            throw new InvalidParameterException("URL is not valid");
         }
         return dto;
     }
@@ -103,6 +108,8 @@ public class URLService {
                     LOGGER.error("Error saving url {}", e);
                 }
             }
+        } else {
+            throw new InvalidParameterException("URL is not valid");
         }
         return generateURLShorterner(url);
     }
@@ -127,7 +134,15 @@ public class URLService {
      * check whether the given URL is valid or not
      */
     private boolean validateURL(String url) {
-        return true;
+        boolean result = false;
+        try {
+            // Parse the URL to check for any syntax errors
+            new URL(url);
+            result = true;
+        } catch (MalformedURLException e) {
+            result = false;
+        }
+        return result;
     }
      
     /** 

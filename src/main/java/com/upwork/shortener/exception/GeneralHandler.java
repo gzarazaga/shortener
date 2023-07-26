@@ -1,5 +1,7 @@
 package com.upwork.shortener.exception;
 
+import java.security.InvalidParameterException;
+
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -16,7 +18,14 @@ public class GeneralHandler {
 
   // Exception handler for other exceptions (if needed)
   @ExceptionHandler(ExpiredUrlException.class)
-  public ResponseEntity<String> handleExpiredUrlExceptionExceptions(ExpiredUrlException ex) {
+  public ResponseEntity<String> handleExpiredUrlExceptionException(ExpiredUrlException ex) {
       return ResponseEntity.status(HttpStatus.CONFLICT).body(ex.getMessage());
   }
+
+    // Exception handler for other exceptions (if needed)
+  @ExceptionHandler(InvalidParameterException.class)
+  public ResponseEntity<String> handleInvalidParameterException(InvalidParameterException ex) {
+      return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(ex.getMessage());
+  }
+  
 }
