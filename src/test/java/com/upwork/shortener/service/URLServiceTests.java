@@ -3,7 +3,11 @@ package com.upwork.shortener.service;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 import java.time.ZonedDateTime;
@@ -68,4 +72,33 @@ public class URLServiceTests {
             });
     }
 
+    @Test
+    void saveURLTest() {
+        URLShortener urlShortener = new URLShortener();
+        urlShortener.setId(1l);
+        urlShortener.setOriginalURL("www.google.clom");
+        urlShortener.setCreatedOn(ZonedDateTime.now());
+
+        when(urlRepository.findByOriginalURL(anyString())).thenReturn(Optional.ofNullable(null));
+        when(urlRepository.save(any())).thenReturn(urlShortener);
+
+        URLShortenerDTO dto = urlService.saveUrl("www.google.clom");
+
+        assertNotNull(dto);
+        verify(urlRepository, times(1)). save(any());
+    }
+
+    @Test
+    void saveURLDontSaveTest() {
+        URLShortener urlShortener = new URLShortener();
+        urlShortener.setId(1l);
+        urlShortener.setOriginalURL("www.google.clom");
+        urlShortener.setCreatedOn(ZonedDateTime.now());
+
+        when(urlRepository.findByOriginalURL(anyString())).thenReturn(Optional.ofNullable(urlShortener));
+
+        URLShortenerDTO dto = urlService.saveUrl("www.google.clom");
+        
+        verify(urlRepository, times(0)). save(any());
+    }
 }
