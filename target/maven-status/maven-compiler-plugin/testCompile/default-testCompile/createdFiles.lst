@@ -1,2 +1,3 @@
-com/upwork/shortener/utils/Base62Test.class
+com/upwork/shortener/utils/Base62Tests.class
 com/upwork/shortener/ShortenerApplicationTests.class
+com/upwork/shortener/service/URLServiceTests.class

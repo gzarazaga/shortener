@@ -54,5 +54,6 @@ public class URLShortener implements DomainConstants {
     public void setOriginalURL(String originalURL) {
         this.originalURL = originalURL;
     }
+    
 }
 

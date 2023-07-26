@@ -26,7 +26,13 @@ public class URLService {
      
     private final String domain;
     private final int retentionPeriodinDays;
-     
+
+    public URLService() {
+        super();
+        this.domain = null;
+        this.retentionPeriodinDays = 0;
+    }
+
     @Autowired
     public URLService(@Value("${domain.shortener}") String domain, @Value("${domain.retentionperiod.days}") int retentionPeriodinDays) {
         this.domain = domain;

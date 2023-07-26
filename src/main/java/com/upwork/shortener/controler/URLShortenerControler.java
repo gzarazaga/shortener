@@ -21,6 +21,8 @@ import com.upwork.shortener.service.URLService;
 @RestController
 @RequestMapping("/api/url")
 public class URLShortenerControler {
+    private static final String HTTPPrefix = "http://";
+    
     @Autowired
     private URLService urlService;
     
@@ -36,7 +38,7 @@ public class URLShortenerControler {
     @GetMapping(value = "/reverse")
     public RedirectView getURL(@RequestParam(value = "shortenedURL") String shortenedURL) throws URLNotFoundException, ExpiredUrlException {
         RedirectView redirectView = new RedirectView();
-        redirectView.setUrl("http://" + urlService.getURL(shortenedURL).getOriginalURL());
+        redirectView.setUrl(HTTPPrefix + urlService.getURL(shortenedURL).getOriginalURL());
   
         return redirectView;
     }
