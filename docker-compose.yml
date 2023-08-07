@@ -9,7 +9,7 @@ services:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
     ports:
-      - "5432:5432"
+      - "5432"
 
   # Servicio para la aplicación Spring Boot
   app:
@@ -26,3 +26,5 @@ services:
       SPRING_DATASOURCE_POSTGRES_DB: url-shortener
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: postgres
+      DATASOURCE_HOST: db
+      DATASOURCE_PORT: 5432
