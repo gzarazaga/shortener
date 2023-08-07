@@ -11,11 +11,15 @@ COPY target/shortener-0.0.1-SNAPSHOT.jar /app/app.jar
 EXPOSE 8081
 
 # Define environment variables for connecting to the PostgreSQL database
-ENV DB_HOST=localhost
-ENV DB_PORT=5432
-ENV DB_NAME=url-shortener
-ENV DB_USERNAME=postgres
-ENV DB_PASSWORD=postgres
+# ENV DB_HOST=localhost
+# ENV DB_PORT=5432
+# ENV DB_NAME=url-shortener
+# ENV DB_USERNAME=postgres
+# ENV DB_PASSWORD=postgres
+ENV SPRING_DATASOURCE_HOST: db
+ENV SPRING_DATASOURCE_POSTGRES_DB: url-shortener
+ENV SPRING_DATASOURCE_USERNAME: postgres
+ENV SPRING_DATASOURCE_PASSWORD: postgres
 
 # Install necessary dependencies (PostgreSQL client)
 RUN apt-get update && apt-get install -y \

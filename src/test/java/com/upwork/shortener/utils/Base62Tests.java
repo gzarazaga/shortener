@@ -5,8 +5,13 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
-@SpringBootTest
+import com.upwork.shortener.ShortenerApplication;
+import com.upwork.shortener.config.H2TestProfileJPAConfig;
+
+@SpringBootTest(classes = {ShortenerApplication.class, H2TestProfileJPAConfig.class})
+@ActiveProfiles("test")
 public class Base62Tests {
 
     @Autowired

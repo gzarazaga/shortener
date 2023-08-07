@@ -1,0 +1,28 @@
+version: "3.7"
+
+services:
+  # Servicio para la base de datos PostgreSQL
+  db:
+    image: postgres:latest
+    environment:
+      POSTGRES_DB: url-shortener
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+
+  # Servicio para la aplicación Spring Boot
+  app:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/url-shortener
+      SPRING_DATASOURCE_HOST: db
+      SPRING_DATASOURCE_POSTGRES_DB: url-shortener
+      SPRING_DATASOURCE_USERNAME: postgres
+      SPRING_DATASOURCE_PASSWORD: postgres

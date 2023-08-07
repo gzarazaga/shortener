@@ -19,14 +19,18 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.exceptions.base.MockitoException;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 
+import com.upwork.shortener.ShortenerApplication;
+import com.upwork.shortener.config.H2TestProfileJPAConfig;
 import com.upwork.shortener.dto.URLShortenerDTO;
 import com.upwork.shortener.entity.URLShortener;
 import com.upwork.shortener.exception.ExpiredUrlException;
 import com.upwork.shortener.exception.URLNotFoundException;
 import com.upwork.shortener.repository.URLRepository;
 
-@SpringBootTest
+@SpringBootTest(classes = {ShortenerApplication.class, H2TestProfileJPAConfig.class})
+@ActiveProfiles("test")
 public class URLServiceTests {
 
     @InjectMocks
