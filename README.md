@@ -23,6 +23,7 @@ The application will start, and you should see the log messages indicating that 
 ### Run the Application with Docker compose
 
 docker-compose build
+
 docker-compose up
 
 ### Access the Application:
