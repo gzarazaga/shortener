@@ -20,6 +20,11 @@ mvn clean package
 mvn spring-boot:run
 The application will start, and you should see the log messages indicating that the server has started successfully.
 
+### Run the Application with Docker compose
+
+docker-compose build
+docker-compose up
+
 ### Access the Application:
 
 Open your web browser and go to http://localhost:8081. You can use postman to rich the web service.
